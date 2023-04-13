@@ -28,11 +28,11 @@ jobs:
           dotnet-version: 6.x
 
       - name: Restore NuGet packages
-        run: dotnet restore --verbosity quiet
+        run: dotnet restore ${{ env.PROJECT_DIR }}${{ env.PROJECT_FILE }} --verbosity quiet
         working-directory: ${{ env.PROJECT_DIR }}
 
       - name: Publish
-        run: dotnet publish -c Release -o ${{ env.BUILD_PUBLISH_PATH }} --no-restore --verbosity quiet
+        run: dotnet publish ${{ env.PROJECT_DIR }}${{ env.PROJECT_FILE }} -c Release -o ${{ env.BUILD_PUBLISH_PATH }} --no-restore --verbosity quiet
         working-directory: ${{ env.PROJECT_DIR }}
 
       - name: Upload artifacts
