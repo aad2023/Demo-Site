@@ -46,7 +46,7 @@ jobs:
     needs: build
     runs-on: windows-latest
     env:
-      DEPLOY_PUBLISH_PATH: './publish'
+      DEPLOY_PUBLISH_PATH: 'publish/'
 
     steps:
       - name: Checkout
@@ -60,6 +60,11 @@ jobs:
         with:
           name: blazor-wasm-artifacts
           path: ${{ env.DEPLOY_PUBLISH_PATH }}
+          
+      - name: View file structure
+        run: |
+             cd publish
+             tree /F
 
   #    - name: Commit and push
   #      run: |
