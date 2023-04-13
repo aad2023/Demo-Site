@@ -9,7 +9,7 @@ on:
 
 env:
   PROJECT_DIR: 'src/BlazorDemoApp/'
-  PROJECT_FILE: 'BlazorDemoApp.csproj'
+  PROJECT_FILE: 'src/BlazorDemoApp/BlazorDemoApp.csproj'
   WWWROOT_PATH: 'publish/wwwroot'
 
 jobs:
@@ -31,8 +31,7 @@ jobs:
           dotnet-version: 6.x
 
       - name: Restore NuGet packages
-        run: dotnet restore ${{ env.PROJECT_DIR }}${{ env.PROJECT_FILE }} --verbosity quiet
-        working-directory: ${{ env.PROJECT_DIR }}
+        run: dotnet restore "${{ env.PROJECT_FILE }}" --verbosity quiet
 
   #    - name: Publish
   #      run: dotnet publish ${{ env.PROJECT_DIR }}${{ env.PROJECT_FILE }} -c Release -o ${{ env.BUILD_PUBLISH_PATH }} --no-restore --verbosity quiet
