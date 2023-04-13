@@ -8,8 +8,8 @@ on:
       - 'release-*.*.*'
 
 env:
-  PROJECT_DIR: './path/to/your'
-  PROJECT_FILE: 'project.csproj'
+  PROJECT_DIR: './src/BlazorDemoApp/'
+  PROJECT_FILE: 'BlazorDemoApp.csproj'
   WWWROOT_PATH: './publish/wwwroot'
 
 jobs:
