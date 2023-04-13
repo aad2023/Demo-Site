@@ -33,39 +33,33 @@ jobs:
       - name: Restore NuGet packages
         run: dotnet restore "${{ env.PROJECT_FILE }}" --verbosity quiet
 
-  #    - name: Publish
-  #      run: dotnet publish ${{ env.PROJECT_DIR }}${{ env.PROJECT_FILE }} -c Release -o ${{ env.BUILD_PUBLISH_PATH }} --no-restore --verbosity quiet
-  #      working-directory: ${{ env.PROJECT_DIR }}
+      - name: Publish
+        run: dotnet publish "${{ env.PROJECT_FILE }}" -c Release -o ${{ env.BUILD_PUBLISH_PATH }} --no-restore --verbosity quiet
 
-  #    - name: Upload artifacts
-  #      uses: actions/upload-artifact@v2
-  #      with:
-  #        name: blazor-wasm-artifacts
-  #        path: ${{ env.BUILD_PUBLISH_PATH }}
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: blazor-wasm-artifacts
+          path: ${{ env.BUILD_PUBLISH_PATH }}
 
-  #deploy:
-  #  needs: build
-  #  runs-on: windows-latest
-  #  env:
-  #    DEPLOY_PUBLISH_PATH: './publish'
+  deploy:
+    needs: build
+    runs-on: windows-latest
+    env:
+      DEPLOY_PUBLISH_PATH: './publish'
 
-  #  steps:
-  #    - name: Setup .NET
-  #      uses: actions/setup-dotnet@v1
-  #      with:
-  #        dotnet-version: 6.x
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          ref: 'gh-pages'
+          fetch-depth: 0
 
-  #    - name: Checkout
-  #      uses: actions/checkout@v2
-  #      with:
-  #        ref: 'gh-pages'
-  #        fetch-depth: 0
-
-  #    - name: Download artifacts
-  #      uses: actions/download-artifact@v2
-  #      with:
-  #        name: blazor-wasm-artifacts
-  #        path: ${{ env.DEPLOY_PUBLISH_PATH }}
+      - name: Download artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: blazor-wasm-artifacts
+          path: ${{ env.DEPLOY_PUBLISH_PATH }}
 
   #    - name: Commit and push
   #      run: |
