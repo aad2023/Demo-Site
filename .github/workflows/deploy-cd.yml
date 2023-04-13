@@ -23,7 +23,7 @@ jobs:
         uses: actions/checkout@v2
         
       - name: View file structure
-        run: tree
+        run: tree /F
 
   #    - name: Setup .NET
   #      uses: actions/setup-dotnet@v1
