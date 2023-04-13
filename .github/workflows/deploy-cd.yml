@@ -1,0 +1,76 @@
+name: Blazor WASM WebApp CI/CD
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - 'release-*.*.*'
+
+env:
+  PROJECT_DIR: './path/to/your'
+  PROJECT_FILE: 'project.csproj'
+  WWWROOT_PATH: './publish/wwwroot'
+
+jobs:
+  build:
+    runs-on: windows-latest
+    env:
+      BUILD_PUBLISH_PATH: './publish'
+      
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 6.x
+
+      - name: Restore NuGet packages
+        run: dotnet restore --verbosity quiet
+        working-directory: ${{ env.PROJECT_DIR }}
+
+      - name: Publish
+        run: dotnet publish -c Release -o ${{ env.BUILD_PUBLISH_PATH }} --no-restore --verbosity quiet
+        working-directory: ${{ env.PROJECT_DIR }}
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: blazor-wasm-artifacts
+          path: ${{ env.BUILD_PUBLISH_PATH }}
+
+  deploy:
+    needs: build
+    runs-on: windows-latest
+    env:
+      DEPLOY_PUBLISH_PATH: './publish'
+
+    steps:
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 6.x
+
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          ref: 'gh-pages'
+          fetch-depth: 0
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: blazor-wasm-artifacts
+          path: ${{ env.DEPLOY_PUBLISH_PATH }}
+
+      - name: Commit and push
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "noreply@github.com"
+          cp -r ${{ env.WWWROOT_PATH }}/* ./
+          git add .
+          git commit -m "Deploy Blazor WASM WebApp"
+          git push origin gh-pages
+
